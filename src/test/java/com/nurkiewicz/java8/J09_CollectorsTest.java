@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.data.Offset.offset;
@@ -27,7 +28,8 @@ public class J09_CollectorsTest {
 	public void calculateAverageHeight() throws IOException {
 		final List<Person> people = dao.loadPeopleDatabase();
 
-		final Double averageHeight = 0.0; // people.stream().
+		final Double averageHeight = people.stream()
+                .collect(Collectors.averagingDouble(Person::getHeight));
 
 		assertThat(averageHeight).isEqualTo(174, offset(0.5));
 	}

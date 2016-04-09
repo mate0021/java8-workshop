@@ -4,9 +4,11 @@ import com.google.common.base.Splitter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,11 @@ public class LoremIpsum {
 	}
 
 	public static Map<String, Integer> wordCount(String text) {
-		throw new UnsupportedOperationException("wordCount()");
+        Map<String, Integer> result = new HashMap<>();
+
+        splitWords(text).stream().forEach(s -> result.merge(s.toLowerCase(), 1, (x, y) -> x + y));
+
+        return result;
 	}
 
 	private static List<String> splitWords(String text) {

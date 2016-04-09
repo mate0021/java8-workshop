@@ -4,13 +4,15 @@ import com.nurkiewicz.java8.util.LoremIpsum;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.entry;
 
-@Ignore
+//@Ignore
 public class J08_NewMapMethodsTest {
 
 	@Test
@@ -41,7 +43,7 @@ public class J08_NewMapMethodsTest {
 		Map<String, Integer> wordCount = LoremIpsum.wordCount(loremIpsum);
 
 		//when
-		int totalWords = 0;  //wordCount...
+		int totalWords = wordCount.values().stream().reduce(0, (acc, x) -> acc + x);
 
 		//then
 		assertThat(totalWords).isEqualTo(441);
@@ -53,7 +55,13 @@ public class J08_NewMapMethodsTest {
 		Map<String, Integer> wordCount = LoremIpsum.wordCount(loremIpsum);
 
 		//when
-		final Set<String> fiveMostCommon = null;   //wordCount...
+		final Set<String> fiveMostCommon = wordCount
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer> comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(5)
+                .collect(Collectors.toSet());
 
 		//then
 		assertThat(fiveMostCommon).containsOnly("eget", "sit", "amet", "et", "sed");
@@ -65,7 +73,11 @@ public class J08_NewMapMethodsTest {
 		Map<String, Integer> wordCount = LoremIpsum.wordCount(loremIpsum);
 
 		//when
-		final Set<String> uniqueWords = null;       //wordCount...
+		final Set<String> uniqueWords = wordCount
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue() == 1)
+                .map(Map.Entry::getKey).collect(Collectors.toSet());
 
 		//then
 		assertThat(uniqueWords)
@@ -73,4 +85,15 @@ public class J08_NewMapMethodsTest {
 				.contains("tempor", "laoreet", "netus");
 	}
 
+
+//    public static void main(String[] args) {
+//        Map<String, Integer> wc = new HashMap<>();
+//        System.out.println(wc.merge("abc", 1, (x, y) -> x + y));
+//        System.out.println(wc.merge("abc", 1, (x, y) -> x + y));
+//        System.out.println(wc.merge("abc", 1, (x, y) -> x + y));
+//        System.out.println(wc.merge("abc", 1, (x, y) -> x + y));
+//
+//        System.out.println(wc);
+//
+//    }
 }
