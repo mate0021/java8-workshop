@@ -1,8 +1,13 @@
 package com.nurkiewicz.java8.defmethods;
 
-public class RuleEngine {
+public class RuleEngine implements Job, Engine, Lifecycle {
+
+//	public String start() {
+//		return "RuleEngine";
+//	}
 
 	public String start() {
-		return "RuleEngine";
+		return Job.super.start();
 	}
+
 }
