@@ -81,10 +81,15 @@ public class J06_OptionalTest {
 	 */
 	private Optional<String> tryLookupAddressById(int id) {
 
-        Optional<Person> malePerson = tryFindPerson(id).filter(p -> p.getSex() == MALE);
-        Optional<String> optAddress = malePerson.flatMap(p -> tryLookupAddress(p)).filter(a -> !a.isEmpty());
-        return optAddress.map(address -> address.trim());
+        Optional<Person> malePerson =
+                tryFindPerson(id).
+                filter(p -> p.getSex() == MALE);
 
+        Optional<String> optAddress =
+                malePerson.flatMap(p -> tryLookupAddress(p)).
+                        filter(a -> !a.isEmpty());
+
+        return optAddress.map(address -> address.trim());
 	}
 
 
