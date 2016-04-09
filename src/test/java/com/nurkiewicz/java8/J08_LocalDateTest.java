@@ -5,13 +5,11 @@ import com.nurkiewicz.java8.holidays.PolishHolidays;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalUnit;
 import java.util.stream.Stream;
 
 import static java.time.Month.DECEMBER;
@@ -19,7 +17,7 @@ import static java.time.Month.MAY;
 import static java.time.Month.SEPTEMBER;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@Ignore
+//@Ignore
 public class J08_LocalDateTest {
 
 	private final Holidays holidays = new PolishHolidays();
@@ -31,7 +29,10 @@ public class J08_LocalDateTest {
 	@Test
 	public void shouldCountNumberOfHolidaysIn2014() throws Exception {
 		//given
-		final Stream<LocalDate> holidaysIn2014 = null;
+		final Stream<LocalDate> holidaysIn2014 =
+                Stream.iterate(LocalDate.of(2014, 1, 1), d -> d.plusDays(1))
+                .limit(Year.of(2014).length())
+                .filter(d -> holidays.isHoliday(d));
 
 		//when
 		final long numberOfHolidays = holidaysIn2014.count();
@@ -49,7 +50,7 @@ public class J08_LocalDateTest {
 		final LocalDate today = LocalDate.of(2014, MAY, 12);
 
 		//when
-		final LocalDate previousWednesday = today;
+		final LocalDate previousWednesday = today.with(TemporalAdjusters.previous(DayOfWeek.WEDNESDAY));
 
 		//then
 		assertThat(previousWednesday).isEqualTo(LocalDate.of(2014, MAY, 7));
@@ -68,7 +69,13 @@ public class J08_LocalDateTest {
 	}
 
 	public TemporalAdjuster nextHoliday() {
-		throw new UnsupportedOperationException("nextHoliday()");
+        return new TemporalAdjuster() {
+            @Override
+            public Temporal adjustInto(Temporal temporal) {
+                LocalDate date = LocalDate.from(temporal);
+                return holidays.nextHolidayAfter(date);
+            };
+        };
 	}
 
 	/**
@@ -98,4 +105,10 @@ public class J08_LocalDateTest {
 		assertThat(periodToBillionth.getMonths()).isEqualTo(3);
 	}
 
+//    public static void main(String[] args) {
+//        System.out.println(Instant.now());
+//        System.out.println(ZonedDateTime.now());
+//        System.out.println(LocalDate.now());
+//        System.out.println(TemporalAdjuster.class);
+//    }
 }
