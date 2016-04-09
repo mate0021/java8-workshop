@@ -10,7 +10,11 @@ public class PrimeUtil {
 	 * @see LongStream#iterate(long, LongUnaryOperator)
 	 */
 	public static long nextPrimeAfter(long x) {
-		throw new UnsupportedOperationException("nextPrimeAfter()");
+        return LongStream
+                .iterate(x + 1, e -> e + 1)
+                .filter(e -> isPrime(e))
+                .findFirst()
+                .getAsLong();
 	}
 
 	/**
@@ -18,7 +22,9 @@ public class PrimeUtil {
 	 * @see LongStream#range(long, long)
 	 */
 	public static boolean isPrime(long x) {
-		throw new UnsupportedOperationException("isPrime()");
+        return LongStream
+                .range(2, x)
+                .noneMatch(l -> x % l == 0);
 	}
 
 }

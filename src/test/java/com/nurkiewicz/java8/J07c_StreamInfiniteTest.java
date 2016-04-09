@@ -5,16 +5,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.offset;
 
 /**
  * @see PrimeUtil
  */
-@Ignore
+//@Ignore
 public class J07c_StreamInfiniteTest {
 
 	@Test
@@ -60,7 +62,10 @@ public class J07c_StreamInfiniteTest {
 	@Test
 	public void shouldCalculateProductOfFirstFivePrimes() throws Exception {
 		//given
-		LongStream primes = LongStream.iterate(2, null);
+		LongStream primes =
+                LongStream
+                        .iterate(2, e -> e + 1)
+                        .filter(PrimeUtil::isPrime);
 
 		//when
 		final long product = primes.limit(5).reduce(1, (acc, x) -> acc * x);
@@ -72,10 +77,10 @@ public class J07c_StreamInfiniteTest {
 	@Test
 	public void shouldGenerateGrowingStrings() throws Exception {
 		//given
-		final Stream<String> starStream = Stream.iterate("", null);
+		final Stream<String> starStream = Stream.iterate("", s -> s + "*");
 
 		//when
-		List<String> strings = null;
+		List<String> strings = starStream.limit(7).collect(toList());
 
 		//then
 		assertThat(strings).containsExactly(
@@ -98,10 +103,10 @@ public class J07c_StreamInfiniteTest {
 	@Test
 	public void shouldEstimatePi() throws Exception {
 		//given
-		Stream<Point> randomPoints = null;
+		Stream<Point> randomPoints = Stream.generate(Point::random).limit(1000000);
 
 		//when
-		final double piDividedByFour = 0;
+		final double piDividedByFour = randomPoints.filter(p -> p.distance() < 1).count();
 
 		//then
 		assertThat(piDividedByFour * 4).isEqualTo(Math.PI, offset(0.001));

@@ -124,12 +124,12 @@ public class J07_StreamsTest {
 
 	@Test
 	public void findUniqueCountryCodes() {
-		final List<Integer> distinctCountryCodes = PEOPLE.
-                stream().
-                map(p -> p.getPhoneNumbers()).
-                flatMap(Phone::getCountryCode).
-                distinct().
-                collect(toList()); // PEOPLE.stream()...flatMap()...distinct()
+        final List<Integer> distinctCountryCodes = PEOPLE
+                .stream()
+                .flatMap(p -> p.getPhoneNumbers().stream())
+                .map(Phone::getCountryCode)
+                .distinct()
+                .collect(toList());
 
 		assertThat(distinctCountryCodes).containsExactly(10, 11, 12);
 	}
@@ -141,6 +141,10 @@ public class J07_StreamsTest {
 	public void forEachYoungPerson() {
 		List<String> names = new ArrayList<>();
 
+        PEOPLE
+                .stream()
+                .filter(p -> p.getDateOfBirth().isAfter(LocalDate.of(1985, Month.DECEMBER, 25)))
+                .forEach(p -> names.add(p.getName()));
 		// PEOPLE.stream()...forEach()
 
 		assertThat(names).containsExactly("Jane", "Eve");
@@ -157,6 +161,7 @@ public class J07_StreamsTest {
 
 		//when
 		//use iter... here
+        iter.forEachRemaining(i -> sb.append(i));
 
 		//then
 		assertThat(sb.toString()).isEqualToIgnoringCase("123");

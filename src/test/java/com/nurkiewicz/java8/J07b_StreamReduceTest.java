@@ -3,6 +3,7 @@ package com.nurkiewicz.java8;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +48,9 @@ public class J07b_StreamReduceTest {
 		final List<Integer> input = Arrays.asList(4, 2, 6, 3, 8, 1);
 
 		//when
-		final int max = 0;  //input.stream()...
+		final int max = input
+                .stream()
+                .reduce(0, (acc, x) -> Integer.max(acc, x));
 
 		//then
 		assertThat(max).isEqualTo(8);
@@ -59,7 +62,7 @@ public class J07b_StreamReduceTest {
 		final List<Integer> input = Arrays.asList(2, 3, 5, 7);
 
 		//when
-		final List<Integer> doubledPrimes = null;   //input.stream()...
+		final List<Integer> doubledPrimes = input;
 
 		//then
 		assertThat(doubledPrimes).containsExactly(2 * 2, 3 * 2, 5 * 2, 7 * 2);
