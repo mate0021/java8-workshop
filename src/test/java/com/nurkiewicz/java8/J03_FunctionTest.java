@@ -28,36 +28,25 @@ public class J03_FunctionTest {
 
 	@Test
 	public void shouldPrependHello() {
-		final Function<Integer, String> fun = new Function<Integer, String>() {
-			@Override
-			public String apply(Integer integer) {
-				return "Answer is " + integer;
-			}
-		};
+		Function<Integer, String> fun = (Integer integer) -> { return "Answer is " + integer; };
+
+		fun = (Integer x) -> "Answer is " + x;
+
+		fun = x -> "Answer is " + x;
 
 		assertThat(fun.apply(42)).isEqualTo("Answer is 42");
 	}
 
 	@Test
 	public void shouldProduceAnswer() {
-		final Supplier<Integer> answerFun = new Supplier<Integer>() {
-			@Override
-			public Integer get() {
-				return 42;
-			}
-		};
+		final Supplier<Integer> answerFun = () -> 42;
 
 		assertThat(answerFun.get()).isEqualTo(42);
 	}
 
 	@Test
 	public void shouldDecideIfNegative() {
-		final Predicate<Double> isNegative = new Predicate<Double>() {
-			@Override
-			public boolean test(Double aDouble) {
-				return aDouble < 0;
-			}
-		};
+		final Predicate<Double> isNegative = (aDouble) -> aDouble < 0;
 
 		assertThat(isNegative.test(3.0)).isFalse();
 		assertThat(isNegative.test(0.0)).isFalse();
@@ -68,12 +57,7 @@ public class J03_FunctionTest {
 	public void shouldCallOtherClassInConsumer() {
 		final Date dateMock = mock(Date.class);
 
-		final Consumer<Long> consumer = new Consumer<Long>() {
-			@Override
-			public void accept(Long aLong) {
-				dateMock.setTime(aLong);
-			}
-		};
+		final Consumer<Long> consumer = (aLong) -> dateMock.setTime(aLong);
 
 		consumer.accept(1000L);
 		consumer.accept(2000L);
@@ -148,12 +132,8 @@ public class J03_FunctionTest {
 	}
 
 	private Function<String, Integer> createStringLenFunction() {
-		return new Function<String, Integer>() {
-			@Override
-			public Integer apply(String s) {
-				return s.length();
-			}
-		};
+		return String::length;
+//		return (String s) -> s.length();
 	}
 
 }

@@ -6,21 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.function.Function;
 
 public interface Encrypter {
-
-	default byte[] encode(byte[] bytes, Function<Byte, Byte> aFunction) {
-		final byte[] result = new byte[bytes.length];
-
-		for (int i = 0; i < bytes.length; ++i) {
-			result[i] = aFunction.apply(bytes[i]);
-		}
-
-		return result;
-	}
-
-	Function<Byte, Byte> transformer();
+	byte[] encode(byte[] bytes);
 
 	default byte[] encode(String str, Charset charset) {
 		return encode(str.getBytes(charset));

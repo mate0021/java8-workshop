@@ -13,12 +13,4 @@ public class ReverseEncrypter implements Encrypter {
 		return result;
 	}
 
-	Function<Byte, Byte> transformer() {
-		return new Function<Byte, Byte>() {
-			@Override
-			public Byte apply(Byte aByte) {
-				return new Byte((0xFF - aByte));
-			}
-		};
-	}
 }
