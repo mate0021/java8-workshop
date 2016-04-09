@@ -27,6 +27,11 @@ import static org.mockito.Mockito.mock;
 public class J03_FunctionTest {
 
 	@Test
+	public void someTest(){
+		Function<Long, Date> f = Date::new; //pod spodem tworzona jest lambda
+	}
+
+	@Test
 	public void shouldPrependHello() {
 		Function<Integer, String> fun = (Integer integer) -> { return "Answer is " + integer; };
 
@@ -71,12 +76,7 @@ public class J03_FunctionTest {
 	public void shouldCallOtherClassInPrimitiveConsumer() {
 		final Date dateMock = mock(Date.class);
 
-		final LongConsumer consumer = new LongConsumer() {
-			@Override
-			public void accept(long value) {
-				dateMock.setTime(value);
-			}
-		};
+		final LongConsumer consumer = (long value) -> { dateMock.setTime(value); };
 
 		consumer.accept(1000L);
 		consumer.accept(2000L);
