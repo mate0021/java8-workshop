@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.nurkiewicz.java8.people.Sex.MALE;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -15,7 +16,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * Transform old-fashioned code using nulls with Optional
  * Hint: use map/filter/flatMap/ifPresent
  */
-@Ignore
+//@Ignore
 public class J06_OptionalTest {
 
 	private static final int PERSON_ID_WITH_NO_ADDRESS = 1;
@@ -74,12 +75,20 @@ public class J06_OptionalTest {
 		return Optional.ofNullable(lookupAddressOrNull(person));
 	}
 
+
 	/**
 	 * TODO: Copy and refactor code from {@link #lookupAddressByIdOrNull}, but avoid nulls
 	 */
 	private Optional<String> tryLookupAddressById(int id) {
-		return Optional.empty(); // tryFindPerson(id).
+
+        Optional<Person> malePerson = tryFindPerson(id).filter(p -> p.getSex() == MALE);
+        Optional<String> optAddress = malePerson.flatMap(p -> tryLookupAddress(p)).filter(a -> !a.isEmpty());
+        return optAddress.map(address -> address.trim());
+
 	}
+
+
+
 
 	@Test
 	public void nulls() {
@@ -95,4 +104,28 @@ public class J06_OptionalTest {
 		assertThat(tryLookupAddressById(PERSON_ID_WITH_ADDRESS).get()).isEqualTo("Some St.");
 	}
 
+    public static void main(String[] args) {
+        Optional<String> opt = Optional.of("abc");
+
+        Optional<Integer> x = opt.map(String::length);
+        Optional<Double> aDouble = x.map(y -> y * 2.0);
+
+        // zamiast s != null & !s.isEmpty()
+
+        opt.filter(s -> !s.isEmpty());
+
+        opt = Optional.empty();
+        opt = Optional.ofNullable(null);
+
+        opt.flatMap(s -> tryParse(s));
+
+    }
+
+    static Optional<Integer> tryParse(String s) {
+        try {
+            return Optional.of(Integer.parseInt(s));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
 }
