@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -20,7 +21,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * - BufferedReader.lines()
  * - Comparator improvements
  */
-@Ignore
+//@Ignore
 public class J08_FilesTest {
 
 	private final PersonDao dao = new PersonDao();
@@ -39,6 +40,7 @@ public class J08_FilesTest {
 		final List<String> names = people.stream().
 				map(Person::getName).
 				distinct().
+                sorted().
 				collect(toList());
 
 		assertThat(names).startsWith("Aleksandar", "Alexander", "Alexandra", "Ali", "Alice");
@@ -62,8 +64,12 @@ public class J08_FilesTest {
 	public void shouldSortByDateOfBirthWhenSameNames() throws IOException {
 		final List<Person> people = dao.loadPeopleDatabase();
 
-		final List<String> names = people.stream().
-				map(p -> p.getName() + '-' + p.getDateOfBirth().getYear()).
+		final List<String> names = people.stream()
+                .sorted(
+                        comparing(Person::getName)
+                                .thenComparing(Person::getDateOfBirth)
+                )
+				.map(p -> p.getName() + '-' + p.getDateOfBirth().getYear()).
 				collect(toList());
 
 		assertThat(names).startsWith("Aleksandar-1966", "Alexander-1986", "Alexander-1987", "Alexandra-1988", "Ali-1974");
